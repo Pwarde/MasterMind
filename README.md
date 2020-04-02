@@ -1,0 +1,2 @@
+# MasterMind
+A mastermind game
