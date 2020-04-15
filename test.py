@@ -47,7 +47,7 @@ class CodeEvaluation(unittest.TestCase):
 
     def test_correct_places(self):
         guess = [2, 3, 4, 5]
-        self.assertEqual(self.turn.correct_place(guess, self.code), ((1, 1), (2, 4)))
+        self.assertEqual(self.turn.correct_place(guess, self.code), ((1, 1), (2, 4), 2))
 
     def test_wrong_places(self):
         reducedGuess = (2, 3, 2, 6)

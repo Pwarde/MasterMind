@@ -6,10 +6,9 @@ class Turn:
         super().__init__()
         self.secretCode = code
         self.colors = int(settings['colors']) or 6  # TODO: Remove or
-        print(self.secretCode)
+        # print(self.secretCode)
 
     def input_code(self, *args, **kwargs):
-        print(kwargs)
         message = kwargs.get('message') or "Please input a numerical code seperated with spaces"
         userInput = input(message)
 
@@ -30,7 +29,6 @@ class Turn:
         return inBounds
 
     def not_duplicate(self, guess, turns):
-        print(turns)
         for turn in turns:
             if guess == turn:
                 return False
@@ -48,24 +46,37 @@ class Turn:
             return False
         return True
 
-    # def evaluate_turn(self, guess, code):
+
+class Checks:
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+
+    def evaluate_turn(self, guess, code):
+        reducedCode, reducedGuess, correctPlaces = self.correct_place(guess, code)
+        wrongPlaces = self.wrong_place(reducedGuess, reducedCode)
+        return correctPlaces, wrongPlaces
 
     def correct_place(self, guess, code):
         combined = list(zip(guess, code))
         
         reduced = [i for i in combined if i[0] != i[1]]
-        reducedGuess, reducedCode = zip(*reduced)
+        if not reduced:
+            return [], [], len(code)
+        else:
+            reducedGuess, reducedCode = zip(*reduced)
+            correctPlaces = len(guess) - len(reducedGuess)
 
-        return reducedCode, reducedGuess
+            return reducedCode, reducedGuess, correctPlaces
 
     def wrong_place(self, reducedGuess, reducedCode):
         reducedCode = list(reducedCode)
-        wrong_places = 0
+        wrongPlaces = 0
         for i in reducedGuess:
             try:
                 idx = reducedCode.index(i)
                 reducedCode.pop(idx)
-                wrong_places += 1
+                wrongPlaces += 1
             except ValueError:
                 None
-        return wrong_places
+        return wrongPlaces

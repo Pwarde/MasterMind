@@ -1,5 +1,5 @@
 from game import Game
-from turn import Turn
+from turn import Turn, Checks
 
 settings = {
     'codeLength': 4,
@@ -7,7 +7,6 @@ settings = {
     'maxTurns': 4,
 }
 game = Game(settings)
-game.secretCode = game.generate_code()
 
 
 def do_turn(game, *args, **kwargs):
@@ -18,11 +17,20 @@ def do_turn(game, *args, **kwargs):
 
 
 for i in range(game.settings['maxTurns']):
-    guess = do_turn(game)
+    message = 'Please enter your next guess: '
+    guess = do_turn(game) if i == 0 else do_turn(game, message=message)
     game.turns.append(guess)
+    checks = Checks()
+    correctPlaces, wrongPlaces = checks.evaluate_turn(guess, game.secretCode)
+    if correctPlaces == game.settings['codeLength']:
+        print(f'You guessed correctly. The code is {game.secretCode} \nIt took you {len(game.turns)} turn(s) to guess right!')
+        break
+    else:
+        print(f'correct: {correctPlaces}, wrong placement: {wrongPlaces}')
+print('game is over')
 
 
-print(game.turns)
+# print(game.turns)
 
 
 # print(turn.verify_guess(guess, game.turns))
