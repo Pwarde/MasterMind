@@ -3,4 +3,8 @@
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
+    "plantuml.diagramsRoot": "docs/diagrams/src",
+    "plantuml.exportOutDir": "docs/diagrams/output",
+    "plantuml.fileExtensions": ".wsd,.pu,.puml,.plantuml,.iuml",
+    "plantuml.exportFormat": "svg",
 }

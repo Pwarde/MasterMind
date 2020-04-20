@@ -1,0 +1,20 @@
+@startuml
+skinparam PackageStyle rectangle
+actor player
+actor settings
+rectangle Mastermind {
+    player -> (Start game)
+    (Set game variables) <- settings
+    (Start game) <. (Set game variables) : << include >>
+    (Start game) --> (Generate code)
+
+    (Generate code) --> (Prompt for code guess)
+    (Prompt for code guess) --> (Player enters guess)
+    player -> (Player enters guess)
+    (Player enters guess) <. (Check guess is valid) : <<include>>
+    (Check guess is valid) <- settings
+    (Player enters guess) --> (Check guess)
+    (Check guess) --> (Display outcome)
+}
+
+@enduml
