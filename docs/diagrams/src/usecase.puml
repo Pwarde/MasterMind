@@ -8,13 +8,16 @@ rectangle Mastermind {
     (Start game) <. (Set game variables) : << include >>
     (Start game) --> (Generate code)
 
-    (Generate code) --> (Prompt for code guess)
+    (Generate code) --> (New turn)
+    (New turn) -->(Prompt for code guess)
     (Prompt for code guess) --> (Player enters guess)
     player -> (Player enters guess)
     (Player enters guess) <. (Check guess is valid) : <<include>>
     (Check guess is valid) <- settings
     (Player enters guess) --> (Check guess)
     (Check guess) --> (Display outcome)
+    (Display outcome) ..> (New turn) : <<extend>>
+    (Display outcome) --> (End game)
 }
 
 @enduml

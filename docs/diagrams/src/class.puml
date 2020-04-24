@@ -1,0 +1,29 @@
+@startuml
+Class Game {
+    + List secretCode
+    + List turns
+
+    + setCode()
+    + getCode()
+    + appendTurn()
+    + getTurns()
+}
+
+Class Turn {
+    + List guess
+    
+
+
+}
+
+Class Guess {
+    setGuess()
+    evaluateGuess()
+}
+
+Class Result {
+    setResult()
+}
+
+
+@enduml
