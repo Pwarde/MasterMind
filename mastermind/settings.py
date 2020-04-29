@@ -3,45 +3,48 @@ import json
 
 class Settings:
     def show_menu(self):
+        current_settings = self.get_settings()
+        if not current_settings:
+            return None
         try:
-            current_settings = self.get_settings()
             print('The current game settings are:\n')
-            for idx, setting in enumerate(current_settings):
-                print(f"{int(idx)+1}. {setting['description']}: {setting['value']}")
-            self.set_settings(current_settings)
+            lookup = {}
+            for idx, setting in enumerate(current_settings, 1):
+                lookup[idx] = setting
+                print(f"{idx}. {current_settings[setting]['description']}: {current_settings[setting]['value']}")
         except TypeError:
             print("Please make sure there is a valid settings file!")
             return None
-        return current_settings
+        close_settings = self.set_settings(current_settings, lookup)
+        return close_settings
 
-    def get_settings(self):
+    @staticmethod
+    def get_settings():
         try:
             with open("settings.json", "r") as read_file:
                 data = json.load(read_file)
-                print(data)
                 return data
-        except:
-            print("No settings file present")
+        except FileNotFoundError:
+            print("No settings file present, please make sure settings.json is present")
             return None
 
-    def set_settings(self, current_settings):
-        setting_idx = input('Please type the number of the setting to change. Type M to go back to main menu: \n')
-        if setting_idx == 'M':
-            return None
-        else:
-            setting_idx = int(setting_idx) - 1
-            setting_dict = current_settings[setting_idx]
-
+    def set_settings(self, current_settings, lookup):
+        idx = input('\nPlease type the number of the setting to change. Type M to go back to main menu: \n')
+        if idx == 'M':
+            return True
+        elif(idx.isdigit() and 0 < int(idx) <= len(current_settings)):
+            idx = int(idx)
+            setting = current_settings[lookup[idx]]
+            text = setting.get('new_value_text') or setting.get('description')
             try:
-                value = input(setting_dict['new_value_text'])
-            except KeyError:
-                value = input(setting_dict['description'])
+                setting['value'] = int(input(text))
+                
+                with open("settings.json", "w") as write_file:
+                    json.dump(current_settings, write_file, indent=2)
 
-            current_settings[setting_idx][value] = value
-            print('aaa')
-
-            with open("settings.json", "w") as write_file:
-                json.dumps(current_settings, write_file)
-            return current_settings
-
-
+            except ValueError:
+                print("incorrect value please try again.")
+            return False
+        else:
+            print("Incorrect input, please try again")
+            return False

@@ -6,7 +6,6 @@ class Turn:
         super().__init__()
         self.secretCode = code
         self.colors = int(settings['colors']) or 6  # TODO: Remove or
-        # print(self.secretCode)
 
     def input_code(self, *args, **kwargs):
         message = kwargs.get('message') or "Please input a numerical code seperated with spaces"
@@ -16,6 +15,18 @@ class Turn:
         code = re.findall(pattern, userInput)
         code = [int(i) for i in code]
         return code
+
+    def verify_guess(self, guess, turns):
+        if not self.correct_length(guess):
+            print('Invalid length')
+            return False
+        if not self.in_bounds(guess):
+            print(f'Please use only numbers 1-{self.colors}')
+            return False
+        if not self.not_duplicate(guess, turns):
+            print('Duplicate guess, please try again!')
+            return False
+        return True
 
     def correct_length(self, guess):
         return True if len(guess) is len(self.secretCode) else False
@@ -32,18 +43,6 @@ class Turn:
         for turn in turns:
             if guess == turn:
                 return False
-        return True
-
-    def verify_guess(self, guess, turns):
-        if not self.correct_length(guess):
-            print('Invalid length')
-            return False
-        if not self.in_bounds(guess):
-            print(f'Please use only numbers 1-{self.colors}')
-            return False
-        if not self.not_duplicate(guess, turns):
-            print('Duplicate guess, please try again!')
-            return False
         return True
 
 

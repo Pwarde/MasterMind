@@ -56,6 +56,7 @@ turns_table_query = """
 CREATE TABLE IF NOT EXISTS turns (
     id INT AUTO_INCREMENT PRIMARY KEY,
     game_id INT NOT NULL,
+    turn_no INT NOT NULL,
     guess JSON NOT NULL,
     correct INT(2),
     wrong_place INT,

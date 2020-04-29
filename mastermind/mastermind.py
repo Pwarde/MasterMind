@@ -1,10 +1,12 @@
 # from game import Game
 # from turn import Turn, Checks
-from settings import Settings
 
+from menu import Menu
+# from settings import Settings
 
-settings = Settings()
-settings.show_menu()
+menu = Menu()
+# settings = Settings()
+# settings.show_menu()
 # settings = {
 #     'codeLength': 4,
 #     'colors': 6,
