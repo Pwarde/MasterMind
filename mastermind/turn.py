@@ -5,7 +5,7 @@ class Turn:
     def __init__(self, settings, code):
         super().__init__()
         self.secretCode = code
-        self.colors = int(settings['colors']) or 6  # TODO: Remove or
+        self.colors = int(settings['colors'])
 
     def input_code(self, *args, **kwargs):
         message = kwargs.get('message') or "Please input a numerical code seperated with spaces"

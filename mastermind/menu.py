@@ -1,32 +1,39 @@
 from settings import Settings
 from game import Game
 
+
 class Menu:
-    def __init__(self):
-        self.show_menu()
+    def __init__(self, options):
+        # self.show_menu()
+        self.options = options
+        self.back = 'b'
 
     def show_menu(self):
-        print('menu')
-        choice = input('number')
-        if choice == "1":
-            self.new_game()
-        elif choice == "2":
-            self.resume_game()
-        elif choice == "3":
-            self.open_settings()
+        lookup = {}
+        for idx, option in enumerate(options, 1):
+            print(f"{idx}. {option}")
+            lookup[str(idx)] = option
+        return lookup
+
+    def input_menu(self, lookup):
+        message = "give number:\n"
+        return input(message)
+
+    def evaluate_input(self, choice, lookup):
+        print(self.back.capitalize())
+        if choice in lookup:
+            print('select option')
+        elif choice == self.back or choice == self.back.capitalize():
+            print('exit menu or quit game\n')
         else:
-            return None
+            print('Invalid')
 
-    def open_settings(self):
-        settings = Settings()
-        close_settings = settings.show_menu()
-        print(close_settings)
-        self.show_menu() if close_settings else self.open_settings()
 
-    def new_game(self):
-        game = Game()
-        game.new_game()
-
-    def resume_game(self):
-        game = Game()
-        game.resume_game()
+if __name__ == '__main__':
+    options = {"a": ['a', 'b'], 'b':'b', 'c':'d'}
+    menu = Menu(options)
+    lookup = menu.show_menu()
+    print(lookup)
+    choice = menu.input_menu(lookup)
+    menu.evaluate_input(choice, lookup)
+    # print(type(choice))
