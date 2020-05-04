@@ -1,18 +1,28 @@
-# from game import Game
-# from turn import Turn, Checks
-
 from menu import Menu
-# from settings import Settings
+from game import Game
 
-menu = Menu()
-# settings = Settings()
-# settings.show_menu()
-# settings = {
-#     'codeLength': 4,
-#     'colors': 6,
-#     'maxTurns': 4,
-# }
-# game = Game(settings)
+
+def main():
+    def new_game():
+        game = Game()
+        game.new()
+        print('p.')
+
+    def resume_game():
+        game = Game()
+        game.resume()
+
+    options = {"New Game": "new_game()", "Resume game": "resume_game()"}
+
+    menu = Menu(options)
+    action = menu.menu()
+    while action:
+        exec(action)
+        action = menu.menu()
+
+
+if __name__ == '__main__':
+    main()
 
 
 # def do_turn(game, *args, **kwargs):

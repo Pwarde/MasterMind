@@ -4,10 +4,10 @@ from mysql.connector import Error
 
 class DataBase:
     def __init__(self):
-        self.host='localhost'
-        self.database='mastermind'
-        self.user='mysql'
-        self.password='mysql'
+        self.host = 'localhost'
+        self.database = 'mastermind'
+        self.user = 'mysql'
+        self.password = 'mysql'
 
     def connect(self):
         connection = None
@@ -27,6 +27,7 @@ class DataBase:
             cursor.execute(query)
             connection.commit()
             print("query executed")
+            return cursor.lastrowid
         except Error as e:
             print(e)
 

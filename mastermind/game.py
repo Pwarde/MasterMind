@@ -7,7 +7,7 @@ from database import DataBase
 class Game:
     # def __init__(self, settings):
 
-    def new_game(self):
+    def new(self):
         settings = Settings.get_settings()
         maxTurns = settings['maxTurns']['value']
         codeLength = settings['codeLength']['value']
@@ -33,26 +33,41 @@ class Game:
                 "
         db = DataBase()
         connection = db.connect()
-        db.execute(connection, query)
+        game_id = db.execute(connection, query)
+        print(game_id)
+        self.game(game_id)
+        return game_id
 
     # def unpack_settings(self):
     def generate_code(self, codeLength, colors):
         code = [randint(1, colors) for i in range(codeLength)]
         return code
 
-    def resume_game(self):
+    def resume(self):
         game_id = input("Please enter the ID of the game you want to resume:\n")
-        query = f"SELECT secret_code, status, max_turns, code_length, colors FROM games WHERE id = {game_id}"
+        settings = self.fetch_game(game_id)
+        turns = self.fetch_turns(game_id)
+        game(settings, turns)
+
+    def fetch_game(self, game_id):
+        get_game = f"SELECT secret_code, status, max_turns, code_length, colors FROM games WHERE id = {game_id}"
         db = DataBase()
         connection = db.connect()
-        result = db.read(connection, query)
-        print(result)
+        game_metrics = db.read(connection, get_game)
+        print(game_metrics)
         variables = ['secretCode', 'status', 'maxTurns', 'codeLength', 'colors']
-        settings = {i: j for i, j in zip(variables, result[0])}
-        print(settings)
-        # self.game()
+        settings = {i: j for i, j in zip(variables, game_metrics[0])}
+        return settings
 
-    def game(self):
+    def fetch_turns(self, game_id):
+        get_turns = f"SELECT FROM turns WHERE game_id = {game_id} ORDER BY turn_no asc"
+        db = DataBase()
+        connection = db.connect()
+        turns = db.read(connection, get_turns)
+        print(turns)
+        return turns
+
+    def game(self, id):
         """import/get settings and game progress"""
 
     def do_turn(self):
@@ -62,3 +77,8 @@ class Game:
 
     def append_turn(self, lastTurn):
         self.turns.append(lastTurn)
+
+
+if __name__ == '__main__':
+    game = Game()
+    game.resume()

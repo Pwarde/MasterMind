@@ -58,7 +58,7 @@ class Checks:
 
     def correct_place(self, guess, code):
         combined = list(zip(guess, code))
-        
+
         reduced = [i for i in combined if i[0] != i[1]]
         if not reduced:
             return [], [], len(code)

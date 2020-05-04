@@ -38,7 +38,6 @@ class Settings:
             text = setting.get('new_value_text') or setting.get('description')
             try:
                 setting['value'] = int(input(text))
-                
                 with open("settings.json", "w") as write_file:
                     json.dump(current_settings, write_file, indent=2)
 
