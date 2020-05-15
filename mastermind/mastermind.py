@@ -6,7 +6,6 @@ def main():
     def new_game():
         game = Game()
         game.new()
-        print('p.')
 
     def resume_game():
         game = Game()

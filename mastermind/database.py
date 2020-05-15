@@ -1,45 +1,50 @@
 import mysql.connector
 from mysql.connector import Error
+# from contextlib import ContextDecorator
 
 
 class DataBase:
-    def __init__(self):
+    def __init__(self, *args):
         self.host = 'localhost'
         self.database = 'mastermind'
         self.user = 'mysql'
         self.password = 'mysql'
 
-    def connect(self):
-        connection = None
+    def __enter__(self):
         try:
-            connection = mysql.connector.connect(host=self.host,
-                                                 database=self.database,
-                                                 user=self.user,
-                                                 password=self.password)
+            self.connection = mysql.connector.connect(host=self.host,
+                                                      database=self.database,
+                                                      user=self.user,
+                                                      password=self.password)
             print(f"Connected to DB {self.database}")
+            self.cursor = self.connection.cursor()
+            return self
         except Error as e:
             print(e)
-        return connection
 
-    def execute(self, connection, query):
-        cursor = connection.cursor()
+    def __exit__(self, *args, **kwargs):
+        self.cursor.close()
+        self.connection.close()
+
+    def execute(self, query, *args, **kwargs):
+        print(*args)
+        print(**kwargs)
         try:
-            cursor.execute(query)
-            connection.commit()
+            self.cursor.execute(query)
+            self.connection.commit()
             print("query executed")
-            return cursor.lastrowid
+            return self.cursor.lastrowid
         except Error as e:
             print(e)
 
-    def read(self, connection, query):
-        cursor = connection.cursor()
-        result = None
-        try:
-            cursor.execute(query)
-            result = cursor.fetchall()
-            return result
-        except Error as e:
-            print(e)
+    # def read(self, query):
+    #     result = None
+    #     try:
+    #         cursor.execute(query)
+    #         result = cursor.fetchall()
+    #         return result
+    #     except Error as e:
+    #         print(e)
 
 
 games_table_query = """

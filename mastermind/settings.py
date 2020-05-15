@@ -26,7 +26,6 @@ class Settings:
                 return data
         except FileNotFoundError:
             print("No settings file present, please make sure settings.json is present")
-            return None
 
     def set_settings(self, current_settings, lookup):
         idx = input('\nPlease type the number of the setting to change. Type M to go back to main menu: \n')

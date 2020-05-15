@@ -29,7 +29,7 @@ class Turn:
         return True
 
     def correct_length(self, guess):
-        return True if len(guess) is len(self.secretCode) else False
+        return len(guess) == len(self.secretCode)
 
     def in_bounds(self, guess):
         inBounds = True

@@ -5,7 +5,6 @@ from database import DataBase
 
 
 class Game:
-    # def __init__(self, settings):
 
     def new(self):
         settings = Settings.get_settings()
@@ -31,14 +30,12 @@ class Game:
                         '{colors}'     \
                     )                  \
                 "
-        db = DataBase()
-        connection = db.connect()
-        game_id = db.execute(connection, query)
-        print(game_id)
-        self.game(game_id)
+
+        game_id = None
+        with DataBase() as db:
+            game_id = db.execute(query)
         return game_id
 
-    # def unpack_settings(self):
     def generate_code(self, codeLength, colors):
         code = [randint(1, colors) for i in range(codeLength)]
         return code
@@ -51,20 +48,21 @@ class Game:
 
     def fetch_game(self, game_id):
         get_game = f"SELECT secret_code, status, max_turns, code_length, colors FROM games WHERE id = {game_id}"
-        db = DataBase()
-        connection = db.connect()
-        game_metrics = db.read(connection, get_game)
-        print(game_metrics)
+
+        game_metrics = None
+        with DataBase() as db:
+            game_metrics = db.read(get_game)
+
         variables = ['secretCode', 'status', 'maxTurns', 'codeLength', 'colors']
         settings = {i: j for i, j in zip(variables, game_metrics[0])}
         return settings
 
     def fetch_turns(self, game_id):
         get_turns = f"SELECT FROM turns WHERE game_id = {game_id} ORDER BY turn_no asc"
-        db = DataBase()
-        connection = db.connect()
-        turns = db.read(connection, get_turns)
-        print(turns)
+
+        turns = None
+        with DataBase() as db:
+            turns = db.read(get_turns)
         return turns
 
     def game(self, id):
