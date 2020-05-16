@@ -5,6 +5,7 @@ from database import DataBase
 
 
 class Game:
+    # def __init__(self, settings):
 
     def new(self):
         settings = Settings.get_settings()

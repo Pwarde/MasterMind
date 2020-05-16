@@ -1,6 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-# from contextlib import ContextDecorator
 
 
 class DataBase:
@@ -26,9 +25,7 @@ class DataBase:
         self.cursor.close()
         self.connection.close()
 
-    def execute(self, query, *args, **kwargs):
-        print(*args)
-        print(**kwargs)
+    def execute(self, query):
         try:
             self.cursor.execute(query)
             self.connection.commit()
@@ -37,14 +34,14 @@ class DataBase:
         except Error as e:
             print(e)
 
-    # def read(self, query):
-    #     result = None
-    #     try:
-    #         cursor.execute(query)
-    #         result = cursor.fetchall()
-    #         return result
-    #     except Error as e:
-    #         print(e)
+    def read(self, query):
+        result = None
+        try:
+            self.cursor.execute(query)
+            result = self.cursor.fetchall()
+            return result
+        except Error as e:
+            print(e)
 
 
 games_table_query = """
