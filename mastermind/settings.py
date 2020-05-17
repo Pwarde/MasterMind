@@ -23,6 +23,10 @@ class Settings:
         try:
             with open("settings.json", "r") as read_file:
                 data = json.load(read_file)
+                # misschien is het handig om hier een structured dict te returnen. dat werkt denk ik een stuk fijner met je settings uitlezen.
+                # je zou natuurlijk ook van je settings file zelf al een structured dict kunnen maken en die gewoon importen.
+                # de python ConfigParser is ook leuk om naar te kijken, maar ondersteunt alleen strings (je moet dus zelf typecasten):
+                # https://docs.python.org/3/library/configparser.html
                 return data
         except FileNotFoundError:
             print("No settings file present, please make sure settings.json is present")

@@ -42,8 +42,13 @@ class DataBase:
             return result
         except Error as e:
             print(e)
+        # ik zie dit op meer plekken, in dit geval is het niet zo erg. Wel is het good
+        # practice om de error handling zo specifiek mogelijk te houden.
+        # https://wiki.python.org/moin/HandlingExceptions
 
 
+# Als je deze nog wilt gebruiken zou ik hier constants van maken (gewoon in caps scrhijven dus)
+# en ze misschien in een aparte query file zetten
 games_table_query = """
 CREATE TABLE IF NOT EXISTS games (
     id INT AUTO_INCREMENT PRIMARY KEY,

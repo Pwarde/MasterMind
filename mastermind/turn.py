@@ -78,4 +78,5 @@ class Checks:
                 wrongPlaces += 1
             except ValueError:
                 None
+                # return vergeten denk ik
         return wrongPlaces
