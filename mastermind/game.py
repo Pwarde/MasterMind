@@ -60,7 +60,6 @@ class Game:
 
     def fetch_turns(self, game_id):
         get_turns = f"SELECT FROM turns WHERE game_id = {game_id} ORDER BY turn_no asc"
-        
         turns = None
         with DataBase() as db:
             turns = db.read(get_turns)
@@ -71,7 +70,7 @@ class Game:
 
     def do_turn(self):
         turn = Turn()
-        outcome = turn.do_turn() 
+        outcome = turn.do_turn()
         return outcome
         # kan je niet 'return Turn().doTurn()' doen? Al gebruik je deze functie volgens mij niet
 
