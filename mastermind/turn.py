@@ -10,6 +10,8 @@ class Turn:
     def input_code(self, *args, **kwargs):
         message = kwargs.get('message') or "Please input a numerical code seperated with spaces"
         userInput = input(message)
+        # Python variables schrijf je nooit met hoofdletters, user_input ipv. userInput dus (behalve constants natuurlijk)
+
 
         pattern = '\\d+'
         code = re.findall(pattern, userInput)
@@ -78,5 +80,5 @@ class Checks:
                 wrongPlaces += 1
             except ValueError:
                 None
-                # return vergeten denk ik
+                # return vergeten denk ik?
         return wrongPlaces
