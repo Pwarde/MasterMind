@@ -32,6 +32,7 @@ class Menu:
             return 'exit'
         else:
             return False
+        # probeer ervoor te zorgen dat je functies maar 1 datatype returnen
 
 
 if __name__ == '__main__':
