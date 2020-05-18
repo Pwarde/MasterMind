@@ -9,12 +9,12 @@ class Game:
 
     def new(self):
         settings = Settings.get_settings()
-        maxTurns = settings['maxTurns']['value']
-        codeLength = settings['codeLength']['value']
+        max_turns = settings['maxTurns']['value']
+        code_length = settings['codeLength']['value']
         colors = settings['colors']['value']
         status = 1
 
-        secretCode = self.generate_code(codeLength, colors)
+        secret_code = self.generate_code(code_length, colors)
 
         query = f"INSERT into          \
                     games (            \
@@ -24,28 +24,25 @@ class Game:
                         code_length,   \
                         colors         \
                     ) VALUE (          \
-                        '{secretCode}',\
+                        '{secret_code}',\
                         '{status}',    \
-                        '{maxTurns}',  \
-                        '{codeLength}',\
+                        '{max_turns}',  \
+                        '{code_length}',\
                         '{colors}'     \
                     )                  \
                 "
 
-        game_id = None
         with DataBase() as db:
-            game_id = db.execute(query)
-        return game_id
+            return db.execute(query)
 
-    def generate_code(self, codeLength, colors):
-        code = [randint(1, colors) for i in range(codeLength)]
-        return code
+    def generate_code(self, code_length, colors):
+        return [randint(1, colors) for i in range(code_length)]
 
     def resume(self):
         game_id = input("Please enter the ID of the game you want to resume:\n")
         settings = self.fetch_game(game_id)
-        turns = self.fetch_turns(game_id)
-        game(settings, turns)
+        self.turns = self.fetch_turns(game_id)
+        self.game(settings)
 
     def fetch_game(self, game_id):
         get_game = f"SELECT secret_code, status, max_turns, code_length, colors FROM games WHERE id = {game_id}"
@@ -54,25 +51,21 @@ class Game:
         with DataBase() as db:
             game_metrics = db.read(get_game)
 
-        variables = ['secretCode', 'status', 'maxTurns', 'codeLength', 'colors']
-        settings = {i: j for i, j in zip(variables, game_metrics[0])}
-        return settings
+        variables = ['secret_code', 'status', 'max_turns', 'code_length', 'colors']
+        return {i: j for i, j in zip(variables, game_metrics[0])}
 
     def fetch_turns(self, game_id):
         get_turns = f"SELECT FROM turns WHERE game_id = {game_id} ORDER BY turn_no asc"
 
-        turns = None
         with DataBase() as db:
-            turns = db.read(get_turns)
-        return turns
+            return db.read(get_turns)
 
-    def game(self, id):
+    def game(self, settings):
         """import/get settings and game progress"""
 
     def do_turn(self):
         turn = Turn()
-        outcome = turn.do_turn()
-        return outcome
+        return turn.do_turn()
 
     def append_turn(self, lastTurn):
         self.turns.append(lastTurn)

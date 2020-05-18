@@ -15,15 +15,13 @@ class Settings:
         except TypeError:
             print("Please make sure there is a valid settings file!")
             return None
-        close_settings = self.set_settings(current_settings, lookup)
-        return close_settings
+        return self.set_settings(current_settings, lookup)
 
     @staticmethod
     def get_settings():
         try:
             with open("settings.json", "r") as read_file:
-                data = json.load(read_file)
-                return data
+                return json.load(read_file)
         except FileNotFoundError:
             print("No settings file present, please make sure settings.json is present")
 
