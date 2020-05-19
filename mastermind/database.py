@@ -102,17 +102,16 @@ WHERE
     games.id = 1
 """
 
+if __name__ == '__main__':
+    with DataBase() as db:
+        db.execute(games_table_query)
+        db.execute(turns_table_query)
 
-# db = DataBase()
-# connection = db.connect()
 
-# db.execute(connection, games_table_query)
-# db.execute(connection, turns_table_query)
-# db.execute(connection, create_games)
-# db.execute(connection, create_turns)
 # games = db.read(connection, get_games)
 # turns = db.read(connection, get_turns)
-
+# db.execute(connection, create_games)
+# db.execute(connection, create_turns)
 # print(turns)
 # code = json.loads(games[0][0])
 # print(code)

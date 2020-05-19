@@ -1,11 +1,22 @@
 import re
+import json
 
 
 class Turn:
-    def __init__(self, settings, code):
+    def __init__(self, game, turns):
         super().__init__()
-        self.secret_code = code
-        self.colors = int(settings['colors'])
+        self.secret_code = json.loads(game['secret_code'])
+        self.colors = int(game['colors'])
+        self.turns = turns
+
+    def do_turn(self, *args, **kwargs):
+        guess = self.input_code(message='message')
+        if guess == self.secret_code:
+            return 'win'
+        elif self.verify_guess(guess, self.turns):
+            return guess
+        else:
+            return self.do_turn()
 
     def input_code(self, *args, **kwargs):
         message = kwargs.get('message') or "Please input a numerical code seperated with spaces"
@@ -28,6 +39,7 @@ class Turn:
         return True
 
     def correct_length(self, guess):
+        print(self.secret_code)
         return len(guess) == len(self.secret_code)
 
     def in_bounds(self, guess):

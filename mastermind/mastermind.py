@@ -5,11 +5,16 @@ from game import Game
 def main():
     def new_game():
         game = Game()
-        game.new()
+        game_id = game.new()
+        print(game.start(game_id))
 
     def resume_game():
         game = Game()
-        game.resume()
+        game_id = game.resume()
+        game.start(game_id)
+
+    def settings():
+        print('settings')
 
     options = {"New Game": "new_game()", "Resume game": "resume_game()"}
 
@@ -24,11 +29,6 @@ if __name__ == '__main__':
     main()
 
 
-# def do_turn(game, *args, **kwargs):
-#     turn = Turn(game.settings, game.secretCode)
-#     message = kwargs.get('message')
-#     guess = turn.input_code(message=message)
-#     return guess if turn.verify_guess(guess, game.turns) else do_turn(game, message='again')
 
 
 # for i in range(game.settings['maxTurns']):
