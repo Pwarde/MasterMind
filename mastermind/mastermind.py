@@ -1,5 +1,6 @@
 from menu import Menu
 from game import Game
+from settings import Settings
 
 
 def main():
@@ -14,9 +15,14 @@ def main():
         game.start(game_id)
 
     def settings():
-        print('settings')
+        settings = Settings()
+        options = settings.get_settings()
+        print(options)
+        menu = Menu(options)
+        option = menu.menu()
+        print(settings.change(option))
 
-    options = {"New Game": "new_game()", "Resume game": "resume_game()"}
+    options = {"New Game": "new_game()", "Resume game": "resume_game()", "Settings": "settings()"}
 
     menu = Menu(options)
     action = menu.menu()
@@ -36,10 +42,4 @@ if __name__ == '__main__':
 #     guess = do_turn(game) if i == 0 else do_turn(game, message=message)
 #     game.turns.append(guess)
 #     checks = Checks()
-#     correctPlaces, wrongPlaces = checks.evaluate_turn(guess, game.secretCode)
-#     if correctPlaces == game.settings['codeLength']:
-#         print(f'You guessed correctly. The code is {game.secretCode} \nIt took you {len(game.turns)} turn(s) to guess right!')
-#         break
-#     else:
-#         print(f'correct: {correctPlaces}, wrong placement: {wrongPlaces}')
 # print('game is over')

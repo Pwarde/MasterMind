@@ -1,5 +1,6 @@
+import json
 from random import randint
-from turn import Turn
+from turn import Turn, Display
 from settings import Settings
 from database import DataBase
 
@@ -60,14 +61,15 @@ class Game:
     def start(self, game_id):
         game = self.fetch_game(game_id)
         turns = self.fetch_turns(game_id)
-        for i in range(1, game['max_turns']):
+        game['secret_code'] = json.loads(game['secret_code'])
+        for i in range(0, game['max_turns']):
             turn = self.do_turn(game, turns)
-            print(turn)
             if turn == 'win':
-                print('you win!')
-                break
+                return print('you win!')
             else:
                 self.append_turn(turns, turn)
+                self.display(turn, game)
+        return print('lost')
 
     def do_turn(self, game, turns):
         turn = Turn(game, turns)
@@ -75,6 +77,12 @@ class Game:
 
     def append_turn(self, turns, last_turn):
         turns.append(last_turn)
+        print(turns)
+
+    def display(self, turn, game):
+        display = Display(turn, game['secret_code'])
+        print('display')
+        display.evaluate_turn()
 
 
 if __name__ == '__main__':

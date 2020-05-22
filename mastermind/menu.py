@@ -17,7 +17,9 @@ class Menu:
     def show(self):
         lookup = {}
         for idx, option in enumerate(self.options, 1):
-            print(f"{idx}. {option}")
+            key = self.options[option]
+            text = (key['description'] if (type(key) == dict and key.get('description')) else option)
+            print(f"{idx}. {text}")
             lookup[str(idx)] = option
         return lookup
 

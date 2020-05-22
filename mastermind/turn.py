@@ -5,7 +5,7 @@ import json
 class Turn:
     def __init__(self, game, turns):
         super().__init__()
-        self.secret_code = json.loads(game['secret_code'])
+        self.secret_code = game['secret_code']
         self.colors = int(game['colors'])
         self.turns = turns
 
@@ -57,26 +57,28 @@ class Turn:
         return True
 
 
-class Checks:
-    def __init__(self, *args, **kwargs):
-        self.args = args
-        self.kwargs = kwargs
+class Display:
+    def __init__(self, guess, code):
+        self.guess = guess
+        self.code = code
+        print(type(guess))
+        print(type(code))
 
-    def evaluate_turn(self, guess, code):
-        reduced_code, reduced_guess, correct_places = self.correct_place(guess, code)
+    def evaluate_turn(self):
+        reduced_code, reduced_guess, correct_places = self.correct_place()
         wrong_places = self.wrong_place(reduced_guess, reduced_code)
+        self.display(correct_places, wrong_places)
         return correct_places, wrong_places
 
-    def correct_place(self, guess, code):
-        combined = list(zip(guess, code))
+    def correct_place(self):
+        combined = list(zip(self.guess, self.code))
 
         reduced = [i for i in combined if i[0] != i[1]]
         if not reduced:
-            return [], [], len(code)
+            return [], [], len(self.code)
         else:
             reduced_guess, reduced_code = zip(*reduced)
-            correct_places = len(guess) - len(reduced_guess)
-
+            correct_places = len(self.guess) - len(reduced_guess)
             return reduced_code, reduced_guess, correct_places
 
     def wrong_place(self, reduced_guess, reduced_code):
@@ -90,3 +92,6 @@ class Checks:
             except ValueError:
                 None
         return wrong_places
+
+    def display(self, correct_places, wrong_places):
+            print(f'correct: {correct_places}, wrong placement: {wrong_places}')

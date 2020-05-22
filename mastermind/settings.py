@@ -25,22 +25,12 @@ class Settings:
         except FileNotFoundError:
             print("No settings file present, please make sure settings.json is present")
 
-    def set_settings(self, current_settings, lookup):
-        idx = input('\nPlease type the number of the setting to change. Type M to go back to main menu: \n')
-        if idx == 'M':
-            return True
-        elif(idx.isdigit() and 0 < int(idx) <= len(current_settings)):
-            idx = int(idx)
-            setting = current_settings[lookup[idx]]
-            text = setting.get('new_value_text') or setting.get('description')
-            try:
-                setting['value'] = int(input(text))
-                with open("settings.json", "w") as write_file:
-                    json.dump(current_settings, write_file, indent=2)
-
-            except ValueError:
-                print("incorrect value please try again.")
-            return False
+    def change(self, setting):
+        text = setting.get('new_value_text') or setting.get('description')
+        try:
+            setting['value'] = int(input(text))
+            return setting
+        except ValueError:
+            print("incorrect value please try again.")
         else:
             print("Incorrect input, please try again")
-            return False
