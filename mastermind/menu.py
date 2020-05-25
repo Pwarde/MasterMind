@@ -10,7 +10,7 @@ class Menu:
         if outcome == 'exit':
             print('exit')
         elif outcome:
-            return self.options[lookup[value]]
+            return lookup[value], self.options[lookup[value]]
         else:
             self.menu()
 
@@ -40,6 +40,5 @@ if __name__ == '__main__':
     options = {"a": ['a', 'b'], 'b': 'b', 'c': 'd'}
     menu = Menu(options)
     lookup = menu.show()
-    print(lookup)
     choice = menu.input(lookup)
     menu.evaluate(choice, lookup)

@@ -17,18 +17,18 @@ def main():
     def settings():
         settings = Settings()
         options = settings.get_settings()
-        print(options)
         menu = Menu(options)
-        option = menu.menu()
-        print(settings.change(option))
+        option, value = menu.menu()
+        options[option] = settings.change(option, value)
+        settings.set(options)
 
     options = {"New Game": "new_game()", "Resume game": "resume_game()", "Settings": "settings()"}
 
     menu = Menu(options)
-    action = menu.menu()
-    while action:
-        exec(action)
-        action = menu.menu()
+    option, value = menu.menu()
+    while value:
+        exec(value)
+        option, value = menu.menu()
 
 
 if __name__ == '__main__':

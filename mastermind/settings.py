@@ -25,12 +25,19 @@ class Settings:
         except FileNotFoundError:
             print("No settings file present, please make sure settings.json is present")
 
-    def change(self, setting):
-        text = setting.get('new_value_text') or setting.get('description')
+    def change(self, setting, value):
+        text = value.get('new_value_text') or value.get('description')
         try:
-            setting['value'] = int(input(text))
-            return setting
+            value['value'] = int(input(text))
+            return value
         except ValueError:
             print("incorrect value please try again.")
         else:
             print("Incorrect input, please try again")
+
+    def set(self, settings):
+        try:
+            with open("settings.json", "w") as write_file:
+                json.dump(settings, write_file, indent=2)
+        except ValueError:
+            print("Incorrect input, please make sure settings are valid.")
