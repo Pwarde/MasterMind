@@ -25,10 +25,13 @@ def main():
     options = {"New Game": "new_game()", "Resume game": "resume_game()", "Settings": "settings()"}
 
     menu = Menu(options)
-    option, value = menu.menu()
-    while value:
-        exec(value)
+    try:
         option, value = menu.menu()
+        while value:
+            exec(value)
+            option, value = menu.menu()
+    except TypeError:
+        pass
 
 
 if __name__ == '__main__':

@@ -94,4 +94,4 @@ class Display:
         return wrong_places
 
     def display(self, correct_places, wrong_places):
-            print(f'correct: {correct_places}, wrong placement: {wrong_places}')
+        print(f'correct: {correct_places}, wrong placement: {wrong_places}')

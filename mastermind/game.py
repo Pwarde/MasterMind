@@ -3,6 +3,7 @@ from random import randint
 from turn import Turn, Display
 from settings import Settings
 from database import DataBase
+from queries import game_queries, turn_queries
 
 
 class Game:
@@ -14,26 +15,10 @@ class Game:
         code_length = settings['code_length']['value']
         colors = settings['colors']['value']
         status = 1
-
         secret_code = self.generate_code(code_length, colors)
 
-        query = f"INSERT into          \
-                    games (            \
-                        secret_code,   \
-                        status,        \
-                        max_turns,     \
-                        code_length,   \
-                        colors         \
-                    ) VALUE (          \
-                        '{secret_code}',\
-                        '{status}',    \
-                        '{max_turns}',  \
-                        '{code_length}',\
-                        '{colors}'     \
-                    )                  \
-                "
-
         with DataBase() as db:
+            query = game_queries.get('new_game').format(secret_code, status, max_turns, code_length, colors)
             return db.execute(query)
 
     def generate_code(self, code_length, colors):
@@ -43,20 +28,17 @@ class Game:
         return input("Please enter the ID of the game you want to resume:\n")
 
     def fetch_game(self, game_id):
-        get_game = f"SELECT secret_code, status, max_turns, code_length, colors FROM games WHERE id = {game_id}"
-
         game_metrics = None
         with DataBase() as db:
-            game_metrics = db.read(get_game)
-
-        variables = ['secret_code', 'status', 'max_turns', 'code_length', 'colors']
+            query = game_queries.get('get_game').format(game_id)
+            game_metrics = db.read(query)
+        variables = ['id', 'secret_code', 'status', 'max_turns', 'code_length', 'colors']
         return {i: j for i, j in zip(variables, game_metrics[0])}
 
     def fetch_turns(self, game_id):
-        get_turns = f"SELECT * FROM turns WHERE game_id = {game_id} ORDER BY turn_no asc"
-
         with DataBase() as db:
-            return db.read(get_turns)
+            query = turn_queries.get('get_turns').format(game_id)
+            return db.read(query)
 
     def start(self, game_id):
         game = self.fetch_game(game_id)
@@ -76,6 +58,9 @@ class Game:
         return turn.do_turn()
 
     def append_turn(self, turns, last_turn):
+        with DataBase() as db:
+            query = turn_queries.get('append_turn').format(game_id, turn_no, guess, correct, wrong_place)
+            return db.execute(query)
         turns.append(last_turn)
         print(turns)
 
