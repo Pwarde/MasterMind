@@ -26,7 +26,7 @@ class Turn:
         code = re.findall(pattern, user_input)
         return [int(i) for i in code]
 
-    def verify_guess(self, guess, turns):
+    def validate_guess(self, guess, turns):
         if not self.correct_length(guess):
             print('Invalid length')
             return False
@@ -37,6 +37,28 @@ class Turn:
             print('Duplicate guess, please try again!')
             return False
         return True
+
+    def evaluate_guess(self):
+        reduced_code, reduced_guess, correct_places = self.correct_place()
+        wrong_places = self.wrong_place(reduced_guess, reduced_code)
+        self.display(correct_places, wrong_places)
+        return correct_places, wrong_places
+
+
+class Display:
+    def __init__(self, guess, code):
+        self.guess = guess
+        self.code = code
+        print(type(guess))
+        print(type(code))
+
+    def display(self, correct_places, wrong_places):
+        print(f'correct: {correct_places}, wrong placement: {wrong_places}')
+
+
+class Validation:
+    def __init__(self):
+        validation = True
 
     def correct_length(self, guess):
         print(self.secret_code)
@@ -57,18 +79,9 @@ class Turn:
         return True
 
 
-class Display:
-    def __init__(self, guess, code):
-        self.guess = guess
-        self.code = code
-        print(type(guess))
-        print(type(code))
-
-    def evaluate_turn(self):
-        reduced_code, reduced_guess, correct_places = self.correct_place()
-        wrong_places = self.wrong_place(reduced_guess, reduced_code)
-        self.display(correct_places, wrong_places)
-        return correct_places, wrong_places
+class Evaluation:
+    def __init__(self):
+        evaluation = True
 
     def correct_place(self):
         combined = list(zip(self.guess, self.code))
@@ -92,6 +105,3 @@ class Display:
             except ValueError:
                 None
         return wrong_places
-
-    def display(self, correct_places, wrong_places):
-        print(f'correct: {correct_places}, wrong placement: {wrong_places}')
