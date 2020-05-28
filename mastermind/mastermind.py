@@ -1,13 +1,13 @@
-from menu import Menu
-from game import Game
-from settings import Settings
+from data.menu import Menu
+from game.game import Game
+from data.settings import Settings
 
 
 def main():
     def new_game():
         game = Game()
         game_id = game.new()
-        print(game.start(game_id))
+        game.start(game_id)
 
     def resume_game():
         game = Game()

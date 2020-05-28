@@ -1,9 +1,9 @@
 import json
 from random import randint
-from turn import Turn, Display
-from settings import Settings
-from database import DataBase
-from queries import game_queries, turn_queries
+from game.turn import Turn
+from data.settings import Settings
+from data.database import DataBase
+from data.queries import game_queries, turn_queries
 
 
 class Game:
@@ -44,8 +44,9 @@ class Game:
         game = self.fetch_game(game_id)
         turns = self.fetch_turns(game_id)
         game['secret_code'] = json.loads(game['secret_code'])
-        for i in range(0, game['max_turns']):
+        for i in range(0, game["max_turns"]):
             turn = self.do_turn(game, turns)
+            print(turn)
             if turn == 'win':
                 return print('you win!')
             else:

@@ -1,22 +1,21 @@
 import re
-import json
 
 
 class Turn:
     def __init__(self, game, turns):
-        super().__init__()
         self.secret_code = game['secret_code']
         self.colors = int(game['colors'])
         self.turns = turns
 
     def do_turn(self, *args, **kwargs):
-        guess = self.input_code(message='message')
-        if guess == self.secret_code:
-            return 'win'
-        elif self.verify_guess(guess, self.turns):
-            return guess
-        else:
-            return self.do_turn()
+        guess = self.input_code()
+        print(guess)
+        validations = self.validate_guess(guess, self.turns)
+        for validation in validations:
+            if validation['valid'] == False:
+                print(validation['message'])
+                return self.do_turn()
+        return guess, self.evaluate_guess(guess)
 
     def input_code(self, *args, **kwargs):
         message = kwargs.get('message') or "Please input a numerical code seperated with spaces"
@@ -26,78 +25,88 @@ class Turn:
         code = re.findall(pattern, user_input)
         return [int(i) for i in code]
 
-    def validate_guess(self, guess, turns):
-        if not self.correct_length(guess):
-            print('Invalid length')
-            return False
-        if not self.in_bounds(guess):
-            print(f'Please use only numbers 1-{self.colors}')
-            return False
-        if not self.not_duplicate(guess, turns):
-            print('Duplicate guess, please try again!')
-            return False
-        return True
+    def validate_guess(self, guess):
+        """Call the Validation class and check that the guess input is valid"""
+        print('validation reached')
+        validation = Validation(guess, self.turns)
+        return validation.validate()
 
-    def evaluate_guess(self):
-        reduced_code, reduced_guess, correct_places = self.correct_place()
-        wrong_places = self.wrong_place(reduced_guess, reduced_code)
-        self.display(correct_places, wrong_places)
-        return correct_places, wrong_places
-
-
-class Display:
-    def __init__(self, guess, code):
-        self.guess = guess
-        self.code = code
-        print(type(guess))
-        print(type(code))
-
-    def display(self, correct_places, wrong_places):
-        print(f'correct: {correct_places}, wrong placement: {wrong_places}')
+    def evaluate_guess(self, guess):
+        """Call Evaluation class and evaluate the guess"""
+        evaluation = Evaluation(guess, self.secret_code)
+        return evaluation.evaluate()
 
 
 class Validation:
-    def __init__(self):
-        validation = True
+    def __init__(self, guess, turns):
+        self.guess = guess
+        self.turns = turns
+
+    def validate(self):
+        result = []
+        result.append(self.correct_length())
+        result.append(self.in_bounds())
+        result.append(self.not_duplicate())
+        return result
 
     def correct_length(self, guess):
-        print(self.secret_code)
-        return len(guess) == len(self.secret_code)
+        validity = {"name": "correct_length"}
+        message = "Incorrect length, please make sure that your guess is x long"
+        if len(guess) == len(self.secret_code):
+            validity["valid"] = True
+        else:
+            validity["valid"] = False
+            validity["message"] = message
+        return validity
 
     def in_bounds(self, guess):
-        in_bounds = True
+        validity = {"name": "in_bounds", "valid": True}
+        message = "Incorrect value entered, please make sure all values are between 0 and x"
         for value in guess:
             if not 0 < value <= self.colors:
-                in_bounds = False
+                validity["valid"] = False
+                validity["message"] = message
                 break
-        return in_bounds
+        return validity
 
     def not_duplicate(self, guess, turns):
+        validity = {"name": "not_duplicate", "valid": True}
+        message = "This guess has already been made, please think better about what you are doing..."
         for turn in turns:
             if guess == turn:
-                return False
-        return True
+                validity["valid"] = False
+                validity["message"] = message
+        return validity
 
 
 class Evaluation:
-    def __init__(self):
-        evaluation = True
+    def __init__(self, guess, code):
+        self.guess = guess
+        self.code = code
+        self.reduced_guess, self.reduced_code = self.reduce_guess()
 
-    def correct_place(self):
+    def evaluate(self):
+        return self.correct_place(), self.wrong_place()
+
+    def reduce_guess(self):
+        """Remove same values on the same index for 2 same length lists
+           returns reduced lists.
+        """
         combined = list(zip(self.guess, self.code))
-
         reduced = [i for i in combined if i[0] != i[1]]
         if not reduced:
-            return [], [], len(self.code)
+            return [], []
         else:
-            reduced_guess, reduced_code = zip(*reduced)
-            correct_places = len(self.guess) - len(reduced_guess)
-            return reduced_code, reduced_guess, correct_places
+            return zip(*reduced)
 
-    def wrong_place(self, reduced_guess, reduced_code):
-        reduced_code = list(reduced_code)
+    def correct_place(self):
+        correct_places = len(self.guess) - len(self.reduced_guess)
+        return correct_places
+
+    def wrong_place(self):
+        reduced_code = list(self.reduced_code)
         wrong_places = 0
-        for i in reduced_guess:
+        for i in self.reduced_guess:
             try:
                 idx = reduced_code.index(i)
                 reduced_code.pop(idx)

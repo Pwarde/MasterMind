@@ -1,10 +1,10 @@
 {
-  "maxTurns": {
+  "max_turns": {
     "description": "Maximum allowed guesses to win the game",
     "new_value_text": "Give a new allowed number of guesses a player can take",
-    "value": 4
+    "value": 12
   },
-  "codeLength": {
+  "code_length": {
     "description": "Length of the code to guess",
     "new_value_text": "Set a new code length",
     "value": 2
