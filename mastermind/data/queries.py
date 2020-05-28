@@ -10,7 +10,7 @@ game_queries = {
                         '{}', '{}', '{}', '{}', '{}' \
                     )\
                 ",
-    "update": "def",
+    "update_status": "UPDATE games SET status = '{}' WHERE games.id={}",
     "get_game": "SELECT id, secret_code, status, max_turns, code_length, colors FROM games WHERE id = {}"
 }
 

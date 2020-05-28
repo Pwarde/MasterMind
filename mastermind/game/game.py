@@ -48,7 +48,9 @@ class Game:
             turn = [game_id, i]
             # new = [*self.do_turn(game, turns)]
             turn += [*self.do_turn(game, turns)]
-            if turn == 'win':
+            if self.get_win(game["code_length"], turn[3]):
+                status = 'won'
+                self.set_status(game_id, 'won')
                 return print('you win!')
             else:
                 self.append_turn(turns, turn)
@@ -70,6 +72,15 @@ class Game:
         display = Display(turn, game['secret_code'])
         print('display')
         display.evaluate_turn()
+
+    def get_win(self, code_length, correct_positions):
+        if code_length == correct_positions:
+            return True
+
+    def set_status(self, game_id, status):
+        with DataBase() as db:
+            query = game_queries.get('update_status').format(status, game_id)
+            return db.execute(query)
 
 
 if __name__ == '__main__':
