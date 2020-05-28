@@ -5,17 +5,17 @@ class Turn:
     def __init__(self, game, turns):
         self.secret_code = game['secret_code']
         self.colors = int(game['colors'])
+        self.game = game
         self.turns = turns
 
     def do_turn(self, *args, **kwargs):
         guess = self.input_code()
-        print(guess)
-        validations = self.validate_guess(guess, self.turns)
+        validations = self.validate_guess(guess)
         for validation in validations:
-            if validation['valid'] == False:
+            if validation['valid'] is False:
                 print(validation['message'])
                 return self.do_turn()
-        return guess, self.evaluate_guess(guess)
+        return guess, *self.evaluate_guess(guess)
 
     def input_code(self, *args, **kwargs):
         message = kwargs.get('message') or "Please input a numerical code seperated with spaces"
@@ -27,20 +27,20 @@ class Turn:
 
     def validate_guess(self, guess):
         """Call the Validation class and check that the guess input is valid"""
-        print('validation reached')
-        validation = Validation(guess, self.turns)
+        validation = Validation(guess, self.turns, self.game)
         return validation.validate()
 
     def evaluate_guess(self, guess):
         """Call Evaluation class and evaluate the guess"""
-        evaluation = Evaluation(guess, self.secret_code)
+        evaluation = Evaluation(guess, self.game["secret_code"])
         return evaluation.evaluate()
 
 
 class Validation:
-    def __init__(self, guess, turns):
+    def __init__(self, guess, turns, game):
         self.guess = guess
         self.turns = turns
+        self.game = game
 
     def validate(self):
         result = []
@@ -49,31 +49,31 @@ class Validation:
         result.append(self.not_duplicate())
         return result
 
-    def correct_length(self, guess):
+    def correct_length(self):
         validity = {"name": "correct_length"}
-        message = "Incorrect length, please make sure that your guess is x long"
-        if len(guess) == len(self.secret_code):
+        message = "Incorrect length, please make sure that your guess is {} long"
+        if len(self.guess) == len(self.game["secret_code"]):
             validity["valid"] = True
         else:
             validity["valid"] = False
-            validity["message"] = message
+            validity["message"] = message.format(self.game["code_length"])
         return validity
 
-    def in_bounds(self, guess):
+    def in_bounds(self):
         validity = {"name": "in_bounds", "valid": True}
-        message = "Incorrect value entered, please make sure all values are between 0 and x"
-        for value in guess:
-            if not 0 < value <= self.colors:
+        message = "Incorrect value entered, please make sure all values are between 1 and {}"
+        for value in self.guess:
+            if not 0 < value <= self.game["colors"]:
                 validity["valid"] = False
-                validity["message"] = message
+                validity["message"] = message.format(self.game["colors"])
                 break
         return validity
 
-    def not_duplicate(self, guess, turns):
+    def not_duplicate(self):
         validity = {"name": "not_duplicate", "valid": True}
         message = "This guess has already been made, please think better about what you are doing..."
-        for turn in turns:
-            if guess == turn:
+        for turn in self.turns:
+            if self.guess == turn:
                 validity["valid"] = False
                 validity["message"] = message
         return validity

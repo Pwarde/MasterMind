@@ -44,25 +44,26 @@ class Game:
         game = self.fetch_game(game_id)
         turns = self.fetch_turns(game_id)
         game['secret_code'] = json.loads(game['secret_code'])
-        for i in range(0, game["max_turns"]):
-            turn = self.do_turn(game, turns)
-            print(turn)
+        for i in range(1, game["max_turns"]):
+            turn = [game_id, i]
+            # new = [*self.do_turn(game, turns)]
+            turn += [*self.do_turn(game, turns)]
             if turn == 'win':
                 return print('you win!')
             else:
                 self.append_turn(turns, turn)
-                self.display(turn, game)
+                # self.display(turn, game)
         return print('lost')
 
     def do_turn(self, game, turns):
         turn = Turn(game, turns)
         return turn.do_turn()
 
-    def append_turn(self, turns, last_turn):
+    def append_turn(self, turns, turn):
         with DataBase() as db:
-            query = turn_queries.get('append_turn').format(game_id, turn_no, guess, correct, wrong_place)
+            query = turn_queries.get('insert').format(*turn)
             return db.execute(query)
-        turns.append(last_turn)
+        turns.append(turn)
         print(turns)
 
     def display(self, turn, game):
