@@ -3,6 +3,7 @@ class Menu:
         self.options = options
         self.back = 'b'
 
+    # Geen duidelijke benaming voor deze method
     def menu(self):
         lookup = self.show()
         value = self.input(lookup)
@@ -14,6 +15,8 @@ class Menu:
         else:
             self.menu()
 
+    # Nu heb je niet alleen een show_menu method in de settings, maar ook in menu zelf.
+    # Lijkt mij niet logisch.
     def show(self):
         lookup = {}
         for idx, option in enumerate(self.options, 1):
@@ -23,6 +26,7 @@ class Menu:
             lookup[str(idx)] = option
         return lookup
 
+    # parameter te veel? 
     def input(self, lookup):
         message = "give number:\n"
         return input(message)
@@ -37,6 +41,7 @@ class Menu:
 
 
 if __name__ == '__main__':
+    # Ik zou deze options wat meer human readable te maken
     options = {"a": ['a', 'b'], 'b': 'b', 'c': 'd'}
     menu = Menu(options)
     lookup = menu.show()

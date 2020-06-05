@@ -25,6 +25,7 @@ class Game:
         return [randint(1, colors) for i in range(code_length)]
 
     def resume(self):
+        # ik zou deze method een andere naam geven, get_id of zo. misschien past hij ook beter in menu ipv. game 
         return input("Please enter the ID of the game you want to resume:\n")
 
     def fetch_game(self, game_id):

@@ -1,3 +1,4 @@
+# maak hier constants van. dan is het duidelijk vanuit waar dan ook dat je deze variables niet opnieuw moet assignen
 game_queries = {
     "new_game": "INSERT into          \
                     games (              \
