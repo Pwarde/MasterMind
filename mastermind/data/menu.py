@@ -26,7 +26,8 @@ class Menu:
             lookup[str(idx)] = option
         return lookup
 
-    # parameter te veel? 
+    # parameter te veel?
+    # Heeft dit sowieso veel nut? De standaard python method doet praktisch al hetzelfde 
     def input(self, lookup):
         message = "give number:\n"
         return input(message)
