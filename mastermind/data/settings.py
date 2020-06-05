@@ -15,6 +15,9 @@ class Settings:
         except TypeError:
             print("Please make sure there is a valid settings file!")
             return None
+        # De method set_settings kan ik nergens vinden (moet misschien 'set' zijn)? 
+        # En is het logisch om zoveel met settings te doen in een method die eigenlijk 
+        # alleen het menu zou moeten laten zien?
         return self.set_settings(current_settings, lookup)
 
     @staticmethod
